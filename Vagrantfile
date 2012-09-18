@@ -31,8 +31,8 @@ Vagrant::Config.run do |config|
   config.vm.network :hostonly, "192.168.33.10"
 
   # Set the default project share to use nfs
-  config.vm.share_folder("v-web", "/vagrant/www", "./www", :nfs => true)
-  config.vm.share_folder("v-db", "/vagrant/db", "./db", :nfs => true)
+  config.vm.share_folder("v-web", "/vagrant/www", "~/Sites", :nfs => true)
+  # config.vm.share_folder("v-db", "/vagrant/db", "./db", :nfs => true)
 
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
@@ -45,7 +45,7 @@ Vagrant::Config.run do |config|
   # config.vm.provision :shell, :inline => "apt-get install -y python-software-properties && add-apt-repository ppa:ondrej/php5"
 
   # Update the server
-  config.vm.provision :shell, :inline => "apt-get update --fix-missing"
+  # config.vm.provision :shell, :inline => "apt-get update --fix-missing"
 
 
 
@@ -58,48 +58,12 @@ Vagrant::Config.run do |config|
 
     # Enable Puppet
     default_config.vm.provision :puppet do |puppet|
-      puppet.facter = { "fqdn" => "local.pyrocms", "hostname" => "www" } 
+      puppet.facter = { "fqdn" => "local.lamp", "hostname" => "www" } 
       puppet.manifests_path = "puppet/manifests"
-      puppet.manifest_file  = "ubuntu-apache2-mysql-php5.pp"
+      # puppet.manifest_file  = "ubuntu-apache2-mysql-php5.pp"
       puppet.module_path  = "puppet/modules"
     end
 
   end
-
-
-  ###
-  #  Creates an instance with SQLite as the database
-  #  
-  #  To launch run: vagrant up sqlite
-  ###
-  config.vm.define :sqlite do |sqlite_config|
-
-    # Enable Puppet
-    sqlite_config.vm.provision :puppet do |puppet|
-      puppet.facter = { "fqdn" => "local.pyrocms", "hostname" => "www" } 
-      puppet.manifests_path = "puppet/manifests"
-      puppet.manifest_file  = "ubuntu-apache2-sqlite-php5.pp"
-      puppet.module_path  = "puppet/modules"
-    end
-
+  
   end
-
-
-  ###
-  #  Creates an instance using PostgreSQL as the database
-  #  
-  #  To launch run: vagrant up pgsql
-  ###
-  config.vm.define :pgsql do |pgsql_config|
-
-    # Enable Puppet
-    pgsql_config.vm.provision :puppet do |puppet|
-      puppet.facter = { "fqdn" => "local.pyrocms", "hostname" => "www" } 
-      puppet.manifests_path = "puppet/manifests"
-      puppet.manifest_file  = "ubuntu-apache2-pgsql-php5.pp"
-      puppet.module_path  = "puppet/modules"
-    end
-
-  end
-
-end
