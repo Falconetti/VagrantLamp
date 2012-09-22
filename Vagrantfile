@@ -39,7 +39,7 @@ Vagrant::Config.run do |config|
   config.vm.forward_port 80, 8089
 
   # Set the Timezone to something useful
-  config.vm.provision :shell, :inline => "echo \"Europe/London\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
+  config.vm.provision :shell, :inline => "echo \"Europe/Berlin\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
   
   # Enable PHP 5.4 (comment this out to use Ubuntu's default: which is probably 5.3)
   # config.vm.provision :shell, :inline => "apt-get install -y python-software-properties && add-apt-repository ppa:ondrej/php5"
@@ -60,7 +60,7 @@ Vagrant::Config.run do |config|
     default_config.vm.provision :puppet do |puppet|
       puppet.facter = { "fqdn" => "local.lamp", "hostname" => "www" } 
       puppet.manifests_path = "puppet/manifests"
-      # puppet.manifest_file  = "ubuntu-apache2-mysql-php5.pp"
+      puppet.manifest_file  = "ubuntu-apache2-mysql-php5.pp"
       puppet.module_path  = "puppet/modules"
     end
 
